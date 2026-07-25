@@ -1,0 +1,30 @@
+.cleanhead{
+  background: #fff;
+  border-bottom: 1px solid #e5e5e0;
+  position: sticky; top:0; z-index: 50;
+}
+.cleanhead-wrap{
+  max-width: 1180px; margin:0 auto;
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 22px 32px;
+}
+.cleanhead-logo{
+  font-family:'IBM Plex Mono', monospace;
+  font-weight:600; font-size:15px; letter-spacing:0.04em;
+  color:#111;
+}
+.cleanhead-nav{ display:flex; align-items:center; gap:34px; }
+.cleanhead-nav a{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:13px; font-weight:500; letter-spacing:0.04em;
+  color:#111; text-decoration:none; text-transform:uppercase;
+}
+.cleanhead-nav a:hover{ opacity:0.55; }
+.cleanhead-clock{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:13px; color:#111; font-weight:500;
+}
+@media (max-width:700px){
+  .cleanhead-nav{ gap:18px; }
+  .cleanhead-logo{ font-size:13px; }
+}
