@@ -1,12 +1,14 @@
 .cleanhead{
   background: #fff;
+  border-top: 6px solid #1C1410;   /* thick line above navbar */
   border-bottom: 1px solid #e5e5e0;
   position: sticky; top:0; z-index: 50;
 }
 .cleanhead-wrap{
-  max-width: 1180px; margin:0 auto;
+  max-width: 100%;              /* full width */
+  margin:0;
   display:flex; align-items:center; justify-content:space-between;
-  padding: 22px 32px;
+  padding: 22px 48px;           /* side padding instead of centered max-width */
 }
 .cleanhead-logo{
   font-family:'IBM Plex Mono', monospace;
@@ -28,3 +30,15 @@
   .cleanhead-nav{ gap:18px; }
   .cleanhead-logo{ font-size:13px; }
 }
+
+.contact-line{
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 14px;
+  margin-top: 24px;
+}
+.contact-line a{
+  color: #6B1F2A;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.contact-line a:hover{ opacity: 0.7; }
