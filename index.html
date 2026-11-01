@@ -1,39 +1,195 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="stylesheet" href="portfoliocam.css">
-    <title>Portfolio Camille</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Camille Le Bihan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@350;430;620&display=swap">
+<style>
+  /* Layout: one screen. A live pixel grid fills the page; type sits on top in four corners.
+     Single deliberate look (light grid, near-black pixels), set explicitly for every theme. */
+  :root {
+    --paper: #E4E4E1;
+    --pixel: #1E1E1E;
+    --digit: #8B8B86;
+    --ink: #121212;
+    --glow: #1C2A8F;
+    --btn: #121212;
+    --btn-ink: #F2F2EF;
+    --font: "Inter Tight", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color-scheme: light;
+  }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font); overflow: hidden; }
+
+  #grid { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: none; }
+
+  .frame {
+    position: fixed; inset: 0; pointer-events: none;
+    display: grid; grid-template-rows: auto 1fr auto; gap: 24px;
+    padding-block: max(24px, env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-bottom, 0px));
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  @media (min-width: 720px) {
+    .frame { padding-left: max(40px, env(safe-area-inset-left, 0px)); padding-right: max(40px, env(safe-area-inset-right, 0px)); padding-block: 28px 32px; }
+  }
+
+  header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px 24px; flex-wrap: wrap; }
+  .name { font-weight: 620; font-size: 14px; letter-spacing: -.01em; }
+  .places { display: flex; gap: 10px 46px; flex-wrap: wrap; margin: 0; padding: 0; list-style: none;
+            font-weight: 430; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+
+  h1 { margin: 0; align-self: start; padding-top: clamp(8px, 6vh, 64px);
+       font-weight: 350; font-size: clamp(44px, 7.4vw, 92px); line-height: .98; letter-spacing: -.04em; text-wrap: balance; }
+
+  footer { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px 32px; flex-wrap: wrap; }
+  .links { display: flex; gap: 8px; flex-wrap: wrap; pointer-events: auto; }
+  .links a {
+    display: inline-flex; align-items: center; gap: 10px; padding: 11px 16px 11px 18px;
+    background: var(--btn); color: var(--btn-ink); text-decoration: none; border-radius: 999px;
+    font-weight: 430; font-size: 13px; letter-spacing: .01em; cursor: pointer;
+    transition: transform .15s ease, background .15s ease;
+  }
+  .links a svg { width: 12px; height: 12px; }
+  .links a:hover { background: var(--glow); transform: translateY(-1px); }
+  .links a:focus-visible { outline: 2px solid var(--glow); outline-offset: 3px; }
+  .blurb { margin: 0; max-width: 34ch; font-weight: 430; font-size: 12.5px; line-height: 1.45; }
+  .hint { font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--digit); margin-top: 10px; }
+
+  .protect { pointer-events: auto; }
+  .name, .places, h1, .blurb { pointer-events: none; }
+
+  #cursor { position: fixed; left: 0; top: 0; width: 20px; height: 26px; pointer-events: none; transform: translate(-200px, -200px); z-index: 5; }
+  .h-touch { display: none; }
+  @media (hover: none) { #cursor { display: none; } .h-mouse { display: none; } .h-touch { display: inline; } }
+</style>
 </head>
 <body>
-    <p class="contact-line">
-  <a href="https://www.linkedin.com/in/camille-le-bihan/" target="_blank">Check out my LinkedIn</a>
-  &nbsp;or&nbsp;
-  <a href="mailto:camille.lebihan@essca.eu">write me a message</a>.
-</p>
-    <header class="cleanhead">
-  <div class="cleanhead-wrap">
-    <div class="cleanhead-logo">CAMILLE LE BIHAN</div>
-    <nav class="cleanhead-nav">
-      <a href="#projects">WORK</a>
-      <a href="#about">ABOUT</a>
-      <a href="#contact">CONTACT</a>
-      <span id="clock" class="cleanhead-clock">FR&nbsp;&nbsp;--:--</span>
-    </nav>
-  </div>
-</header>
-    <h1>This is Camilles Portfolio</h1>
-    <script>
-  function updateClock(){
-    const now = new Date();
-    const paris = new Intl.DateTimeFormat('en-GB', {
-      timeZone: 'Europe/Paris', hour: '2-digit', minute: '2-digit', hour12: false
-    }).format(now);
-    document.getElementById('clock').textContent = 'FR  ' + paris;
+
+<canvas id="grid" aria-hidden="true"></canvas>
+<svg id="cursor" viewBox="-4 -7 20 28" aria-hidden="true"><path d="M -3 -6 L 13 9 L 5 9.5 L 9.5 18 L 6 19.5 L 1.6 11 L -3 15.5 Z" fill="#111" stroke="#fff" stroke-width="1.3" stroke-linejoin="round"/></svg>
+
+<div class="frame">
+  <header>
+    <div class="name keep">Camille Le Bihan</div>
+    <ul class="places keep" aria-label="Places I have lived">
+      <li>USA</li><li>France</li><li>UK</li><li>Spain</li><li>Netherlands</li>
+    </ul>
+  </header>
+
+  <h1 class="keep">Curiosity<br>compounds.</h1>
+
+  <footer>
+    <div>
+      <nav class="links keep" aria-label="Elsewhere">
+        <a href="https://github.com/camillelebihan" target="_blank" rel="noopener">GitHub <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9 9 3M4 3h5v5"/></svg></a>
+        <a href="https://www.linkedin.com/in/camille-le-bihan/" target="_blank" rel="noopener">LinkedIn <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9 9 3M4 3h5v5"/></svg></a>
+        <a href="https://substack.com/@camillelebihan" target="_blank" rel="noopener">Substack <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9 9 3M4 3h5v5"/></svg></a>
+      </nav>
+      <div class="hint keep"><span class="h-mouse">Move your cursor across the page</span><span class="h-touch">Drag your finger across the page</span></div>
+    </div>
+    <p class="blurb keep">Finance, venture and deep tech.<br>Working on growth, innovation, scale and strategy. Paris-based.</p>
+  </footer>
+</div>
+
+<script>
+(() => {
+  const css = getComputedStyle(document.documentElement);
+  const COL = n => css.getPropertyValue(n).trim();
+  const PAPER = COL('--paper'), PIXEL = COL('--pixel'), DIGIT = COL('--digit'), GLOW = COL('--glow');
+  const LIFE = 8000, FADE = 300;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const cv = document.getElementById('grid'), ctx = cv.getContext('2d');
+  const cur = document.getElementById('cursor');
+  let C, cols, rows, born, blocked, dpr, hover = null;
+
+  function layout() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = innerWidth, h = innerHeight;
+    C = w < 600 ? 16 : 20;
+    cols = Math.ceil(w / C); rows = Math.ceil(h / C);
+    cv.width = w * dpr; cv.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const old = born;
+    born = Array.from({ length: rows }, (_, r) => Array.from({ length: cols }, (_, c) => old && old[r] && old[r][c] !== undefined ? old[r][c] : -1e12));
+    // cells under the text and buttons stay clear
+    blocked = Array.from({ length: rows }, () => new Array(cols).fill(false));
+    // block only the actual words and buttons, not the empty space around them
+    const rects = [];
+    document.querySelectorAll('.keep').forEach(el => {
+      if (el.matches('.links')) { el.querySelectorAll('a').forEach(a => rects.push(a.getBoundingClientRect())); return; }
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      for (let t = walker.nextNode(); t; t = walker.nextNode()) {
+        if (!t.textContent.trim() || !t.parentElement.offsetParent && getComputedStyle(t.parentElement).display === 'none') continue;
+        const rg = document.createRange(); rg.selectNodeContents(t);
+        for (const r of rg.getClientRects()) if (r.width && r.height) rects.push(r);
+      }
+    });
+    rects.forEach(b => {
+      const pad = 2;
+      const c0 = Math.max(0, Math.floor((b.left - pad) / C)), c1 = Math.min(cols - 1, Math.floor((b.right + pad) / C));
+      const r0 = Math.max(0, Math.floor((b.top - pad) / C)), r1 = Math.min(rows - 1, Math.floor((b.bottom + pad) / C));
+      for (let r = r0; r <= r1; r++) for (let c = c0; c <= c1; c++) blocked[r][c] = true;
+    });
   }
-  updateClock();
-  setInterval(updateClock, 1000 * 30);
+
+  const alive = (c, r, now) => r >= 0 && c >= 0 && r < rows && c < cols && now - born[r][c] < LIFE;
+
+  function draw() {
+    const now = performance.now();
+    const w = innerWidth, h = innerHeight;
+    ctx.fillStyle = PAPER; ctx.fillRect(0, 0, w, h);
+    ctx.font = `430 ${C < 20 ? 7.5 : 8.5}px "Inter Tight", Helvetica, Arial, sans-serif`;
+    ctx.textBaseline = 'alphabetic';
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const age = now - born[r][c];
+      if (age < LIFE) {
+        ctx.globalAlpha = age > LIFE - FADE ? (LIFE - age) / FADE : 1;
+        ctx.fillStyle = PIXEL; ctx.fillRect(c * C, r * C, C, C);
+        ctx.globalAlpha = 1;
+        continue;
+      }
+      if (blocked[r][c]) continue;
+      let n = 0;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if ((dx || dy) && alive(c + dx, r + dy, now)) n++;
+      if (n) { ctx.fillStyle = DIGIT; ctx.fillText(n, c * C + 3, r * C + (C < 20 ? 8.5 : 9.5)); }
+    }
+    if (hover) {
+      ctx.save(); ctx.shadowColor = GLOW; ctx.shadowBlur = 26; ctx.fillStyle = 'rgba(28,42,143,.5)';
+      ctx.fillRect(hover[0] * C - 10, hover[1] * C - 10, C + 20, C + 20); ctx.restore();
+    }
+    requestAnimationFrame(draw);
+  }
+
+  function paint(x, y) {
+    const c = Math.floor(x / C), r = Math.floor(y / C), now = performance.now();
+    hover = [c, r];
+    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+      const cc = c + dx, rr = r + dy;
+      if (cc < 0 || rr < 0 || cc >= cols || rr >= rows || blocked[rr][cc]) continue;
+      if ((!dx && !dy) || (Math.abs(dx) + Math.abs(dy) === 1 && Math.random() < .4)) born[rr][cc] = now;
+    }
+  }
+
+  addEventListener('pointermove', e => {
+    cur.style.transform = `translate(${e.clientX - 2}px, ${e.clientY - 2}px)`;
+    if (e.target.closest && e.target.closest('.links')) { hover = null; cur.style.opacity = 0; return; }
+    cur.style.opacity = 1;
+    paint(e.clientX, e.clientY);
+  }, { passive: true });
+  document.addEventListener('pointerleave', () => { hover = null; cur.style.transform = 'translate(-200px,-200px)'; });
+  addEventListener('resize', layout);
+
+  layout();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
+  if (reduce) { const once = () => { draw(); }; once(); } else requestAnimationFrame(draw);
+})();
 </script>
+
 </body>
 </html>
